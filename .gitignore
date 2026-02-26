@@ -31,3 +31,5 @@ local.properties
 
 # Docker & Environment
 .env
+
+node_modules/
