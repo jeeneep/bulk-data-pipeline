@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>인증 확인</title>
+</head>
+<body>
+    <h2 id="title">인증 상태 확인 중...</h2>
+    <div id="content"></div>
+
+    <br>
+    <button onclick="location.reload()">새로고침</button>
+    <button onclick="location.href='login.html'">로그인 페이지로</button>
+
+    <script>
+        fetch('test/auth')
+            .then(response => response.json())
+            .then(data => {
+                const title = document.getElementById('title');
+                const content = document.getElementById('content');
+
+                if (data.isLoggedIn) {
+                    title.innerText = "인증 성공";
+                    content.innerHTML = `
+                        <p>접속 ID: ${data.userId}</p>
+                        <p>현재 응답 서버 포트: ${data.currentPort}</p>
+                        <p>최초 로그인 서버: ${data.firstServer}</p>
+                    `;
+                } else {
+                    title.innerText = "인증되지 않은 사용자";
+                    content.innerHTML = `
+                        <p>세션이 존재하지 않습니다. 포트: ${data.currentPort}</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('title').innerText = "서버 연결 오류";
+            });
+    </script>
+</body>
+</html>

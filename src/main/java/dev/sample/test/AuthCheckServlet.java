@@ -16,37 +16,28 @@ public class AuthCheckServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession(false);
-        resp.setContentType("text/html;charset=UTF-8");
+        // 응답 타입을 JSON으로 설정
+        resp.setContentType("application/json;charset=UTF-8");
         PrintWriter out = resp.getWriter();
-
-        out.println("<html>");
-        out.println("<head><title>Auth Check</title></head>");
-        out.println("<body>");
+        
+        HttpSession session = req.getSession(false); // 기존 세션이 있는지 확인
+        int currentPort = req.getLocalPort(); // 현재 응답하는 톰캣 포트
 
         if (session != null && session.getAttribute("user") != null) {
-
             String userId = (String) session.getAttribute("user");
-            int currentPort = req.getLocalPort();
-            String firstPort = (String) session.getAttribute("serverInfo");
+            String firstServer = (String) session.getAttribute("serverInfo");
 
-            out.println("<h2>인증 성공</h2>");
-            out.println("<p>ID: " + userId + "</p>");
-            out.println("<p>현재 서버 포트: " + currentPort + "</p>");
-            out.println("<p>최초 로그인 서버: " + firstPort + "</p>");
-            out.println("<br>");
-            out.println("<button onclick='location.reload()'>새로고침</button>");
-
+            out.print("{");
+            out.print("\"isLoggedIn\": true,");
+            out.print("\"userId\": \"" + userId + "\",");
+            out.print("\"currentPort\": " + currentPort + ",");
+            out.print("\"firstServer\": \"" + firstServer + "\"");
+            out.print("}");
         } else {
-        	int currentPort = req.getLocalPort();
-            out.println("<h2>인증되지 않은 사용자</h2>");
-            out.println("<p>현재 서버 포트: " + currentPort + "</p>");
-            out.println("<p>세션이 없습니다.</p>");
-            out.println("<a href='../login.html'>로그인 페이지로 이동</a>");
-
+            out.print("{");
+            out.print("\"isLoggedIn\": false,");
+            out.print("\"currentPort\": " + currentPort);
+            out.print("}");
         }
-
-        out.println("</body>");
-        out.println("</html>");
     }
 }

@@ -20,11 +20,9 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", id);
             session.setAttribute("serverInfo", "Tomcat-" + req.getLocalPort());
             
-            resp.sendRedirect("/test/auth");
-//            resp.sendRedirect(req.getContextPath() + "/test/auth");
+            resp.sendRedirect("/auth.html");
         } else {
         	resp.sendRedirect("/login.html");
-//        	resp.sendRedirect(req.getContextPath() + "/login.html");
         }
     }
 }
