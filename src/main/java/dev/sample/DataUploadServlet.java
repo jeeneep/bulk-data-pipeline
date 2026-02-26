@@ -28,7 +28,6 @@ public class DataUploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // 전송할 파일명 "csvFile"
         Part filePart = request.getPart("csvFile"); 
         
         if (filePart == null) {
@@ -53,15 +52,13 @@ public class DataUploadServlet extends HttpServlet {
             // reader.readLine(); 
             
             while ((line = reader.readLine()) != null) {
-                // TODO: 2단계에서 이곳에 메시지 큐(Producer)로 데이터를 보내는 로직이 들어갑니다.
+                //메세지큐(Producer)로 데이터를 보냄
             	producer.sendData(line);
             	
                 count++;
                 
-                // 진행 상황 확인을 위해 5만 건마다 로그 출력
-                if (count % 50000 == 0) {
-                    System.out.println("[" + port + " 서버] 현재 " + count + "건 RabbitMQ에 적재 중...!!");
-                }
+                // 진행 상황 확인을 위해 로그 출력
+                
             }
             
             System.out.println("[" + port + " 서버] 총 " + count + "건의 데이터 전송 완료.\n");
