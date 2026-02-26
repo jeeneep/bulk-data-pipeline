@@ -1,0 +1,38 @@
+# Java
+*.class
+*.bluej
+*.pkg
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# Eclipse Project files
+.project
+.classpath
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Log files
+*.log
+
+# Docker & Environment
+.env
