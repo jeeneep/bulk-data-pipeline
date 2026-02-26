@@ -1,6 +1,6 @@
 // client_scripts/csv_uploader.js
 // 시작하기 전에 
-// 1. npm install axios csv-parser
+// 1. npm install axios csv-parser form-data
 // 2. file_path 본인의 경로로 바꿔주세요
 const fs = require('fs');
 const axios = require('axios');
@@ -8,22 +8,29 @@ const csv = require('csv-parser');
 
 const FILE_PATH = 'C:/woori-workspace/98.data/card_data/edu_data_F.csv';
 const TARGET_URL = 'http://localhost/api/upload';
-const BATCH_SIZE = 10000;
+const BATCH_SIZE = 1000;
+
+const FormData = require('form-data');
 
 async function sendBatch(data) {
-    try {
-        // CSV 그대로
-        const csvContent = data.map(row => Object.values(row).join(',')).join('\n');
-        
-        await axios.post(TARGET_URL, csvContent, {
-            headers: { 'Content-Type': 'text/csv' },
-            timeout: 60000 
-        });
-        return true;
-    } catch (error) {
-        console.error('전송 실패:', error.message);
-        return false;
-    }
+    try {
+        const csvContent = data.map(row => Object.values(row).join(',')).join('\n');
+
+        const form = new FormData();
+        form.append('csvFile', Buffer.from(csvContent), {
+            filename: 'batch.csv',
+            contentType: 'text/csv',
+        });
+
+        await axios.post(TARGET_URL, form, {
+            headers: { ...form.getHeaders() }, // 멀티파트 헤더
+            timeout: 60000
+        });
+        return true;
+    } catch (error) {
+        console.error('전송 실패:', error.message);
+        return false;
+    }
 }
 
 async function run() {
