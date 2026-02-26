@@ -28,7 +28,7 @@ public class DataUploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // 프론트엔드에서 전송할 때 사용할 파일명 "csvFile"
+        // 전송할 파일명 "csvFile"
         Part filePart = request.getPart("csvFile"); 
         
         if (filePart == null) {
@@ -42,6 +42,8 @@ public class DataUploadServlet extends HttpServlet {
         
         System.out.println("\n[" + port + " 서버] CSV 파일 수신 및 데이터 처리 시작...");
 
+        RabbitMQProducer producer = new RabbitMQProducer();
+        
         // BufferedReader를 사용하여 스트림 방식으로 한 줄씩 읽어 메모리를 보호
         try (InputStream fileContent = filePart.getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(fileContent, StandardCharsets.UTF_8))) {
@@ -52,16 +54,17 @@ public class DataUploadServlet extends HttpServlet {
             
             while ((line = reader.readLine()) != null) {
                 // TODO: 2단계에서 이곳에 메시지 큐(Producer)로 데이터를 보내는 로직이 들어갑니다.
-                
+            	producer.sendData(line);
+            	
                 count++;
                 
                 // 진행 상황 확인을 위해 5만 건마다 로그 출력
                 if (count % 50000 == 0) {
-                    System.out.println("[" + port + " 서버] 현재 " + count + "건 읽기 완료...!!");
+                    System.out.println("[" + port + " 서버] 현재 " + count + "건 RabbitMQ에 적재 중...!!");
                 }
             }
             
-            System.out.println("[" + port + " 서버] 총 " + count + "건의 데이터를 성공적으로 수신했습니다.\n");
+            System.out.println("[" + port + " 서버] 총 " + count + "건의 데이터 전송 완료.\n");
             
         } catch (Exception e) {
             System.err.println("[" + port + " 서버] 처리 중 오류 발생: " + e.getMessage());
