@@ -11,8 +11,7 @@
 
 # Eclipse
 .metadata
-bin/
-tmp/
+bin/tmp/
 *.tmp
 *.bak
 *.swp
@@ -21,10 +20,6 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-
-# Eclipse Project files
-.project
-.classpath
 
 # MacOS
 .DS_Store
