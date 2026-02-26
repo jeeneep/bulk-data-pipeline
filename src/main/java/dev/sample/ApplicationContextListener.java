@@ -28,7 +28,7 @@ public class ApplicationContextListener implements ServletContextListener {
         // 필수 설정값(별도의 설정파일로 분리 가능, ex. jdbc.properties)
         config.setJdbcUrl("jdbc:mysql://localhost:3306/card_db?serverTimezone=Asia/Seoul");
         config.setUsername("root");
-        config.setPassword("0898");
+        config.setPassword("1234");
 
         // 선택 설정값 예시
 //        config.setMaximumPoolSize(10);
