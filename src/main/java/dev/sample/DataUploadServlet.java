@@ -52,8 +52,7 @@ public class DataUploadServlet extends HttpServlet {
                 //메세지큐로 데이터 보냄
             	producer.sendData(line);
             	
-                count++;
-                
+                count++;               
                 
             }
             

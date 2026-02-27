@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 public class RabbitMQConsumer {
     private final static String QUEUE_NAME = "card_data_queue";
-    private final static int BATCH_SIZE = 1000;  // 1000건 단위로 db에 저장
+    private final static int BATCH_SIZE = 1000;  // 5000건 단위로 db에 저장
 
     public void startConsume(DataSource ds) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -71,7 +71,7 @@ public class RabbitMQConsumer {
                     pstmt.setString(i + 1, columns[i].trim()); 
                 }
                 
-                pstmt.addBatch(); 
+                pstmt.addBatch();
             }
 
             pstmt.executeBatch(); 

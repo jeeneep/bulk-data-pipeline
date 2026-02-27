@@ -27,7 +27,7 @@ public class ApplicationContextListener implements ServletContextListener {
         HikariConfig config = new HikariConfig();
 
         // db 연결
-        config.setJdbcUrl("jdbc:mysql://192.168.0.128:3306/card_db?serverTimezone=Asia/Seoul");
+        config.setJdbcUrl("jdbc:mysql://192.168.0.128:6033/card_db?serverTimezone=Asia/Seoul");
         config.setUsername("root");
         config.setPassword("pwpw");
 
