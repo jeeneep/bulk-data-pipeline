@@ -25,10 +25,11 @@ public class ApplicationContextListener implements ServletContextListener {
 		}
 
         HikariConfig config = new HikariConfig();
-        // 필수 설정값(별도의 설정파일로 분리 가능, ex. jdbc.properties)
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/card_db?serverTimezone=Asia/Seoul");
+
+        // db 연결
+        config.setJdbcUrl("jdbc:mysql://192.168.0.128:3306/card_db?serverTimezone=Asia/Seoul");
         config.setUsername("root");
-        config.setPassword("1234");
+        config.setPassword("pwpw");
 
         // 선택 설정값 예시
 //        config.setMaximumPoolSize(10);
@@ -45,7 +46,7 @@ public class ApplicationContextListener implements ServletContextListener {
         new Thread(() -> {
             try {
                 RabbitMQConsumer consumer = new RabbitMQConsumer();
-                consumer.startConsume(ds); // DB 연결 정보 넘김
+                consumer.startConsume(ds); 
             } catch (Exception e) {
                 System.err.println("[시스템] Consumer 가동 중 오류!");
                 e.printStackTrace();

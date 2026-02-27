@@ -41,24 +41,46 @@ public class RabbitMQConsumer {
     }
 
     private void saveToDB(DataSource ds, List<String> dataList) {
-        // 추후 수정 예정
-        String sql = "INSERT INTO card_table (data_column) VALUES (?)";
+
+        StringBuilder sqlBuilder = new StringBuilder("INSERT INTO CARD_TRANSACTION VALUES (");
+        for (int i = 0; i < 55; i++) {
+            sqlBuilder.append("?");
+            if (i < 54) sqlBuilder.append(", ");
+        }
+        sqlBuilder.append(")");
         
-        try (java.sql.Connection conn = ds.getConnection(); // 명시적으로 java.sql 기입
+        String sql = sqlBuilder.toString();
+        
+        try (java.sql.Connection conn = ds.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             conn.setAutoCommit(false); 
 
-            for (String data : dataList) {
-                pstmt.setString(1, data);
+            for (String message : dataList) {
+                // CSV 한 줄을 콤마로 분리 (55개의 데이터가 들어있어야 함)
+                String[] columns = message.split(",");
+                
+                // 데이터 개수가 55개가 맞는지 검증 (에러 방지용)
+                if (columns.length != 55) {
+                    // 만약 개수가 다르면 로그만 찍고 넘어감 (필요시 수정)
+                    System.err.println("데이터 개수 불일치! 기대: 55, 실제: " + columns.length);
+                    continue; 
+                }
+
+                for (int i = 0; i < 55; i++) {
+                    pstmt.setString(i + 1, columns[i].trim()); 
+                }
+                
                 pstmt.addBatch(); 
             }
 
             pstmt.executeBatch(); 
             conn.commit();        
+            System.out.println(">>> [성공] 팀원 DB에 " + dataList.size() + "건 적재 완료!");
             
         } catch (Exception e) {
-            System.err.println("DB 저장 오류: " + e.getMessage());
+            System.err.println("!!! DB 저장 오류: " + e.getMessage());
+            e.printStackTrace(); // 자세한 에러 원인 확인을 위해 추가
         }
     }
 }

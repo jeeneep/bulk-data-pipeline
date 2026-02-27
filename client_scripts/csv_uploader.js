@@ -6,7 +6,7 @@ const fs = require('fs');
 const axios = require('axios');
 const csv = require('csv-parser');
 
-const FILE_PATH = 'C:/woori-workspace/98.data/card_data/edu_data_F.csv';
+const FILE_PATH = 'C:/Users/3-05/Downloads/card_data/card_data/edu_data_F.csv';
 const TARGET_URL = 'http://localhost/api/upload';
 const BATCH_SIZE = 1000;
 
