@@ -6,24 +6,34 @@ import com.rabbitmq.client.ConnectionFactory;
 import java.nio.charset.StandardCharsets;
 
 public class RabbitMQProducer {
-    // 메시지가 쌓일 큐
     private final static String QUEUE_NAME = "card_data_queue";
+    private Connection connection;
+    private Channel channel;
+
+    // 생성자에서 연결을 미리 한 번만 맺어둡니다.
+    public RabbitMQProducer() {
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("localhost");
+            this.connection = factory.newConnection();
+            this.channel = connection.createChannel();
+            this.channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void sendData(String message) {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost"); 
-
-        try (Connection connection = factory.newConnection();
-             Channel channel = connection.createChannel()) {
-            
-            // 큐가 없으면 생성
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            
-            // CSV 한 줄(message)을 큐로 전송
+        try {
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
-            
         } catch (Exception e) {
-            System.err.println("[RabbitMQ Error] 메시지 전송 실패: " + e.getMessage());
+            System.err.println("[RabbitMQ Error] 전송 실패: " + e.getMessage());
         }
+    }
+
+    // 연결을 닫음
+    public void close() {
+        try { if(channel != null) channel.close(); if(connection != null) connection.close(); } 
+        catch (Exception e) { e.printStackTrace(); }
     }
 }
