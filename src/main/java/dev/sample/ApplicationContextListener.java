@@ -40,6 +40,17 @@ public class ApplicationContextListener implements ServletContextListener {
         ds = new HikariDataSource(config);
 
         ctx.setAttribute("DATA_SOURCE", ds);
+        
+        // consumer 가동
+        new Thread(() -> {
+            try {
+                RabbitMQConsumer consumer = new RabbitMQConsumer();
+                consumer.startConsume(ds); // DB 연결 정보 넘김
+            } catch (Exception e) {
+                System.err.println("[시스템] Consumer 가동 중 오류!");
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     @Override

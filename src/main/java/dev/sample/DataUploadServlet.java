@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-// Nginx가 배분해주는 "/api/upload" 요청을 처리
+// Nginx가 주는 "/api/upload" 요청을 처리
 @WebServlet("/api/upload")
-// 대용량 파일 업로드를 위한 설정 
+// 대용량 파일 업로드를 위한 설정 -> 추후 수정 예정
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024 * 10, // 10MB
     maxFileSize = 1024 * 1024 * 50,       // 50MB
