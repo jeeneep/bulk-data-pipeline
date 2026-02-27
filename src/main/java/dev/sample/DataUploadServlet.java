@@ -14,9 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-// Nginx가 배분해주는 "/api/upload" 요청을 처리
 @WebServlet("/api/upload")
-// 대용량 파일 업로드를 위한 설정 
+// 대용량 파일 업로드를 위한 설정 -> 추후 수정 예정
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024 * 10, // 10MB
     maxFileSize = 1024 * 1024 * 50,       // 50MB
@@ -37,27 +36,24 @@ public class DataUploadServlet extends HttpServlet {
         }
 
         int count = 0;
-        int port = request.getServerPort(); // 현재 실행 중인 서버 포트 (8080 또는 8090)
+        int port = request.getServerPort();
         
         System.out.println("\n[" + port + " 서버] CSV 파일 수신 및 데이터 처리 시작...");
 
         RabbitMQProducer producer = new RabbitMQProducer();
         
-        // BufferedReader를 사용하여 스트림 방식으로 한 줄씩 읽어 메모리를 보호
+        // 스트림 방식으로 한 줄씩 읽음
         try (InputStream fileContent = filePart.getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(fileContent, StandardCharsets.UTF_8))) {
              
             String line;
-            // 첫 줄이 컬럼 제목인 경우 스킵하려면 아래 주석을 해제
-            // reader.readLine(); 
             
             while ((line = reader.readLine()) != null) {
-                //메세지큐(Producer)로 데이터를 보냄
+                //메세지큐로 데이터 보냄
             	producer.sendData(line);
             	
                 count++;
                 
-                // 진행 상황 확인을 위해 로그 출력
                 
             }
             
