@@ -14,13 +14,19 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         
-        // ID가 admin이면 세션 생성
-        if ("admin".equals(id)) {
-            HttpSession session = req.getSession(true); // 새로운 세션 생성
+        // test1이면 세션 불일치 테스트
+        if ("test1".equals(id)) {
+            HttpSession session = req.getSession(true);
             session.setAttribute("user", id);
             session.setAttribute("serverInfo", "Tomcat-" + req.getLocalPort());
             
-            resp.sendRedirect("/auth.html");
+            resp.sendRedirect("/bulk-data-pipeline/auth.jsp");
+        } else if ("test2".equals(id)) {  // test2이면 세션 클러스터링 테스트
+            HttpSession session = req.getSession(true);
+            session.setAttribute("user", id);
+            session.setAttribute("serverInfo", "Tomcat-" + req.getLocalPort());
+            
+            resp.sendRedirect("/auth.jsp");
         } else {
         	resp.sendRedirect("/login.html");
         }
