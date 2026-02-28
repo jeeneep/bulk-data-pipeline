@@ -1,0 +1,31 @@
+{
+  "Debug": true,
+  "EnableSyslog": false,
+  "ListenAddress": ":3000",
+  "MySQLTopologyUser": "orc_user",
+  "MySQLTopologyPassword": "orc_password",
+  "MySQLTopologySSLSkipVerify": true,
+  "BackendDB": "sqlite",
+  "SQLite3DataFile": "/tmp/orchestrator.sqlite3",
+  "DefaultInstancePort": 3306,
+  "DiscoverByShowSlaveHosts": true,
+  "HostnameResolveMethod": "default",
+  "MySQLHostnameResolveMethod": "@@hostname",
+  "SkipBinlogServerUnresolveCheck": true,
+  "ReadOnly": false,
+  "AuthenticationMethod": "",
+  "PowerAuthUsers": [ "*" ],
+  
+  "RecoverMasterClusterFilters": ["*"],
+  "RecoverIntermediateMasterClusterFilters": ["*"],
+  
+  "RecoveryPeriodBlockSeconds": 30, 
+  "InstancePollSeconds": 1,
+  
+  "ApplyMySQLPromotionAfterMasterFailover": true,
+  "ApplyMySQLReadOnly": true,               
+  "DetachLostSlavesAfterMasterFailover": true,
+  
+  "MasterFailoverLostInstancesCap": 10,
+  "CoMasterRecoveryMustPromoteOtherCoMaster": true
+}
