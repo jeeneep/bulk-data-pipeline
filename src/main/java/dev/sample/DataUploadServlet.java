@@ -18,12 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @WebServlet("/api/upload")
-// 대용량 파일 업로드를 위한 설정 -> 추후 수정 예정
-@MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 10, // 10MB
-    maxFileSize = 1024 * 1024 * 50,       // 50MB
-    maxRequestSize = 1024 * 1024 * 100    // 100MB
-)
+@MultipartConfig
 public class DataUploadServlet extends HttpServlet {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DataUploadServlet.class);
