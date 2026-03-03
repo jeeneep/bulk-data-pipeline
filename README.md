@@ -12,7 +12,7 @@
 - **메시지 브로커 (RabbitMQ):** 대용량 DB I/O의 병목을 막아주는 완충재(Buffer) 역할.
 - **데이터베이스 (MySQL in Docker):** Source(Master) - Replica(Slave) 구조로 고가용성 확보.
 
-<img width="1683" height="287" alt="image" src="https://github.com/user-attachments/assets/e4624c43-6afa-4313-822c-2c8ac1a61692" />
+![System Architecture](./images/structure.png)
 
 ## 🛠️계층 구조
 
@@ -70,6 +70,21 @@
   - Master DB 상태 모니터링
   - 장애 감지 시 Replica 자동 승격(Auto-Failover)
   - 단일 장애 지점(SPOF) 제거
+
+## 동작
+### session clustering
+
+**❌ 세션 불일치 문제**
+<p align="center">
+  <img src="./images/세션불일치.gif" width="48%"/>
+</p>
+
+**✅ Redis 기반 세션 공유**
+<p align="center">
+  <img src="./images/세션 클러스터링1.gif" width="48%"/>
+  <img src="./images/세션 클러스터링2.gif" width="48%"/>
+</p>
+
 
 ## 💻기술 스택
 
