@@ -147,7 +147,7 @@
 **✅ 마스터 DB 장애 발생 시 자동 승격 (Orchestrator)**
 
 <p align="center">
-<img src="./images/orchestrator-auto-failover.gif" width="80%"/>
+<img src="./images/orchestrator-auto-failover-v2.gif" width="80%"/>
 </p>
 
 ### ProxySQL Read/Write Split (읽기/쓰기 트래픽 자동 분리)
