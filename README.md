@@ -12,7 +12,35 @@
 - **메시지 브로커 (RabbitMQ):** 대용량 DB I/O의 병목을 막아주는 완충재(Buffer) 역할.
 - **데이터베이스 (MySQL in Docker):** Source(Master) - Replica(Slave) 구조로 고가용성 확보.
 
-![System Architecture](./images/structure.png)
+```mermaid
+    graph LR
+    subgraph "1. Presentation Layer"
+        User((Client Browser))
+        User -- "HTTP Request" --> Nginx[Nginx Load Balancer]
+    end
+
+    subgraph "2. Application Layer"
+        Nginx --> Tomcat1[Tomcat WAS 1]
+        Nginx --> Tomcat2[Tomcat WAS 2]
+
+        Tomcat1 & Tomcat2 <--> Redis[(Redis - Session Store)]
+
+        Tomcat1 & Tomcat2 -->|Async Push| RMQ[RabbitMQ]
+        RMQ --> Consumer[Java Batch Consumer]
+    end
+
+    subgraph "3. Data Layer (HA Architecture)"
+        Consumer -->|JDBC Port: 6033| ProxySQL[ProxySQL Router]
+        ProxySQL -->|Write| Master[(MySQL Master)]
+        ProxySQL -->|Read| Replica1[(MySQL Replica 1)]
+        ProxySQL -->|Read| Replica2[(MySQL Replica 2)]
+        
+        Master -->|Binary Log Sync| Replica1
+        Master -->|Binary Log Sync| Replica2
+        
+        Orc[Orchestrator] --> Master
+    end
+```
 
 ## 🛠️계층 구조
 
