@@ -13,6 +13,7 @@
 - **데이터베이스 (MySQL in Docker):** Source(Master) - Replica(Slave) 구조로 고가용성 확보.
 
 <img width="1683" height="287" alt="image" src="https://github.com/user-attachments/assets/e4624c43-6afa-4313-822c-2c8ac1a61692" />
+
 ## 🛠️계층 구조
 
 ### 1. Presentation Layer
