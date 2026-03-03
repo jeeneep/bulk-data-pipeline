@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @WebServlet("/api/upload")
-// 대용량 파일 업로드를 위한 설정 -> 추후 수정 예정
-@MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 10, // 10MB
-    maxFileSize = 1024 * 1024 * 50,       // 50MB
-    maxRequestSize = 1024 * 1024 * 100    // 100MB
-)
+@MultipartConfig
 public class DataUploadServlet extends HttpServlet {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DataUploadServlet.class);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -30,6 +30,7 @@ public class DataUploadServlet extends HttpServlet {
         Part filePart = request.getPart("csvFile"); 
         
         if (filePart == null) {
+        	logger.warn("Upload attempt failed: No 'csvFile' part found."); // 클라이언트 실수 추적
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("파일이 업로드되지 않았습니다.");
             return;
@@ -37,9 +38,11 @@ public class DataUploadServlet extends HttpServlet {
 
         int count = 0;
         int port = request.getServerPort();
+        long startTime = System.currentTimeMillis(); // 2. 성능 측정을 위한 시작 시간
         
-        System.out.println("\n[" + port + " 서버] CSV 파일 수신 및 데이터 처리 시작...");
-
+        logger.info("[Port {}] CSV upload started. FileName: {}, Size: {} bytes", 
+                port, filePart.getSubmittedFileName(), filePart.getSize());
+        
         RabbitMQProducer producer = new RabbitMQProducer();
         
         // 스트림 방식으로 한 줄씩 읽음
@@ -54,12 +57,19 @@ public class DataUploadServlet extends HttpServlet {
             	
                 count++;               
                 
+
+                
+                if (count % 10000 == 0) {  // 값 변경 가능, 로그 기록 최소화
+                    logger.debug("[Port {}] Progress: {} rows sent to Queue.", port, count);
+                }
+
             }
             
-            System.out.println("[" + port + " 서버] 총 " + count + "건의 데이터 전송 완료.\n");
+            long duration = System.currentTimeMillis() - startTime; // 소요 시간 계산
+            logger.info("[Port {}] Upload completed. Total: {} rows, Time: {}ms", port, count, duration);
             
         } catch (Exception e) {
-            System.err.println("[" + port + " 서버] 처리 중 오류 발생: " + e.getMessage());
+        	logger.error("[Port {}] Error during CSV processing: ", port, e); // 예외 상세 기록
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
