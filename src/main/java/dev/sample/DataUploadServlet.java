@@ -30,7 +30,7 @@ public class DataUploadServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		// dev/sample 패키지 안에 넣었다면 앞에 경로를 붙여줍니다.
-		context = new ClassPathXmlApplicationContext("dev/sample/applicationContext.xml");
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		
 		this.uploadService = context.getBean(CsvUploadService.class);
 	}
