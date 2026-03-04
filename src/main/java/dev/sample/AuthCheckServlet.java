@@ -27,7 +27,7 @@ public class AuthCheckServlet extends HttpServlet {
         // 에러 나던 WebApplicationContextUtils 코드를 지우고, 
         // 우리가 알던 익숙한 방식으로 직접 스프링 설정 파일(xml)을 읽어옵니다.
         // (괄호 안의 파일명은 실제 만들어두신 빈 설정 파일명으로 맞춰주세요)
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("dev/sample/applicationContext.xml");
         
         // 스프링 컨테이너에서 빈을 찾아 주입
         this.authService = context.getBean(AuthService.class);
