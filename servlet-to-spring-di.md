@@ -1,9 +1,7 @@
-# 🔧Servlet에서 Spring Bean(DI) 구조로 리팩토링 정리
+# 🔧Servlet에서 Spring Bean(DI) 구조로 리팩토링
 
 `dev.sample` 패키지 기준으로  
 **Servlet 내부에 있던 비즈니스 로직을 Spring Bean으로 분리하고 DI 형태로 사용하는 구조**로 변경한 내용 정리입니다.
-
----
 
 ## ⚙️ 1. Spring 설정
 
@@ -28,7 +26,7 @@ Spring Bean으로 자동 등록합니다.
 기존에는 이 로직이 Servlet 내부에 직접 구현되어 있었지만
 현재는 Service Bean으로 분리하여 Servlet은 요청 처리, Service는 비즈니스 로직으로 역할이 분리되었습니다.
 
-##🔌3. Servlet에서 Bean 사용하는 방식
+## 🔌3. Servlet에서 Bean 사용하는 방식
 
 Servlet은 Spring이 관리하는 객체가 아니기 때문에 @Autowired를 사용할 수 없습니다.
 
@@ -39,18 +37,19 @@ getBean()으로 Service Bean을 조회하여 사용합니다.
 
 1. **init()에서 Spring 컨테이너 생성**
 
-```java
-ClassPathXmlApplicationContext context =
-    new ClassPathXmlApplicationContext("applicationContext.xml");
-```
+    ```java
+    ClassPathXmlApplicationContext context =
+        new ClassPathXmlApplicationContext("applicationContext.xml");
+    ```
 
 2. 필요한 Bean 조회
-```java
-LoginService loginService = context.getBean(LoginService.class);
-```
-3. 요청 처리 시 Service 호출
+    
+    ```java
+    LoginService loginService = context.getBean(LoginService.class);
+    ```
+4. 요청 처리 시 Service 호출
 
-doGet() / doPost()에서는 해당 Bean 메서드만 호출
+    doGet() / doPost()에서는 해당 Bean 메서드만 호출
 
 ## 🧩 4. Servlet ↔ Service 구조
 | Servlet             | URL           | 사용하는 Bean          | 역할         |
